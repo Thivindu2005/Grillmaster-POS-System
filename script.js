@@ -106,10 +106,59 @@ function closeModal(id) {
 }
 
 
+// ---------- 5. PRODUCT GRID ----------
+
+function renderProducts() {
+  const grid = document.getElementById('productGrid');
+  const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  // filter by category and search text
+  const filtered = products.filter(function (product) {
+    const matchCategory = currentCategory === 'all' || product.category === currentCategory;
+    const matchSearch = product.name.toLowerCase().includes(searchText);
+    return matchCategory && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-text">No products found</div>';
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(function (product) {
+    const outClass = product.stock <= 0 ? 'out-of-stock' : '';
+    html += `
+      <div class="product-card ${outClass}" onclick="addToCart(${product.id})">
+        <div class="product-icon">${escapeHtml(product.icon)}</div>
+        <div class="product-name">${escapeHtml(product.name)}</div>
+        <div class="product-price">${money(product.price)}</div>
+        <div class="product-stock">Stock: ${product.stock}</div>
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+
+// category buttons
+document.getElementById('categories').addEventListener('click', function (event) {
+  const button = event.target.closest('.category-btn');
+  if (!button) return;
+
+  document.querySelectorAll('.category-btn').forEach(function (btn) {
+    btn.classList.remove('active');
+  });
+  button.classList.add('active');
+
+  currentCategory = button.dataset.category;
+  renderProducts();
+});
+
+
 // ---------- 15. START THE APP ----------
 
 function init() {
   document.getElementById('headerShopName').textContent = settings.shopName;
+  renderProducts();
 }
 
 init();
