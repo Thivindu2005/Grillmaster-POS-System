@@ -710,6 +710,44 @@ function deleteCustomer(customerId) {
 }
 
 
+// ---------- 13. SETTINGS ----------
+
+function showSettings() {
+  document.getElementById('shopName').value = settings.shopName;
+  document.getElementById('shopAddress').value = settings.shopAddress;
+  document.getElementById('shopPhone').value = settings.shopPhone;
+  document.getElementById('shopEmail').value = settings.shopEmail;
+  document.getElementById('taxRate').value = settings.taxRate;
+  openModal('settingsModal');
+}
+
+document.getElementById('settingsForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  settings.shopName = document.getElementById('shopName').value.trim();
+  settings.shopAddress = document.getElementById('shopAddress').value.trim();
+  settings.shopPhone = document.getElementById('shopPhone').value.trim();
+  settings.shopEmail = document.getElementById('shopEmail').value.trim();
+  settings.taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+
+  saveData('gm_settings', settings);
+  document.getElementById('headerShopName').textContent = settings.shopName;
+  closeModal('settingsModal');
+  renderCart();   // tax may have changed
+});
+
+
+// ---------- 14. CLOSE MODAL WHEN CLICKING THE DARK BACKGROUND ----------
+
+document.querySelectorAll('.modal').forEach(function (modal) {
+  modal.addEventListener('mousedown', function (event) {
+    if (event.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+});
+
+
 // ---------- 15. START THE APP ----------
 
 function init() {
