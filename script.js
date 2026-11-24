@@ -545,6 +545,99 @@ function deleteProduct(productId) {
 }
 
 
+// ---------- 12. CUSTOMERS CRUD ----------
+
+function showCustomers() {
+  renderCustomersList();
+  openModal('customersModal');
+}
+
+function renderCustomersList() {
+  const list = document.getElementById('customersList');
+
+  if (customers.length === 0) {
+    list.innerHTML = '<div class="empty-text">No customers yet. Add your first customer.</div>';
+    return;
+  }
+
+  let html = '';
+  customers.forEach(function (customer) {
+    // count how many orders this customer has
+    const orderCount = orders.filter(function (o) { return o.customerId === customer.id; }).length;
+
+    html += `
+      <div class="list-item">
+        <div class="list-info">
+          <div class="list-title">👤 ${escapeHtml(customer.name)}</div>
+          <div class="list-sub">${escapeHtml(customer.phone || 'No phone')} | ${escapeHtml(customer.email || 'No email')}</div>
+          <div class="list-sub">${orderCount} order(s)</div>
+        </div>
+        <div class="list-side">
+          <button class="btn btn-edit" onclick="openCustomerForm(${customer.id})">✏️ Edit</button>
+          <button class="btn btn-delete" onclick="deleteCustomer(${customer.id})">🗑️ Delete</button>
+        </div>
+      </div>
+    `;
+  });
+  list.innerHTML = html;
+}
+
+function openCustomerForm(customerId) {
+  document.getElementById('customerForm').reset();
+  document.getElementById('customerId').value = '';
+  document.getElementById('customerFormTitle').textContent = 'Add New Customer';
+
+  if (customerId) {
+    const customer = customers.find(function (c) { return c.id === customerId; });
+    if (customer) {
+      document.getElementById('customerFormTitle').textContent = 'Edit Customer';
+      document.getElementById('customerId').value = customer.id;
+      document.getElementById('customerName').value = customer.name;
+      document.getElementById('customerPhone').value = customer.phone;
+      document.getElementById('customerEmail').value = customer.email;
+    }
+  }
+
+  openModal('customerFormModal');
+}
+
+document.getElementById('customerForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const id = document.getElementById('customerId').value;
+
+  const data = {
+    name: document.getElementById('customerName').value.trim(),
+    phone: document.getElementById('customerPhone').value.trim(),
+    email: document.getElementById('customerEmail').value.trim()
+  };
+
+  if (id) {
+    // UPDATE
+    const customer = customers.find(function (c) { return c.id === parseInt(id); });
+    Object.assign(customer, data);
+  } else {
+    // CREATE
+    data.id = nextId(customers);
+    customers.push(data);
+  }
+
+  saveData('gm_customers', customers);
+  closeModal('customerFormModal');
+  renderCustomersList();
+  renderCustomerSelect();
+});
+
+function deleteCustomer(customerId) {
+  if (!confirm('Are you sure you want to delete this customer?')) return;
+
+  customers = customers.filter(function (c) { return c.id !== customerId; });
+  saveData('gm_customers', customers);
+  renderCustomersList();
+  renderCustomerSelect();
+}
+
+
 // ---------- 15. START THE APP ----------
 
 function init() {
