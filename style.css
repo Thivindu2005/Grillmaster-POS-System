@@ -532,6 +532,45 @@ body {
   border-top: 1px dashed #9ca3af;
 }
 
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .products-grid {
+    max-height: 380px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 8px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-side {
+    justify-content: flex-start;
+  }
+}
+
 /* ---------- Print: only show the receipt ---------- */
 @media print {
   body {
