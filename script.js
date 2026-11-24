@@ -40,10 +40,10 @@ const defaultSettings = {
 
 // ---------- 2. APP STATE ----------
 
-let products  = loadData('gm_products',  defaultProducts);
-let customers = loadData('gm_customers', defaultCustomers);
-let orders    = loadData('gm_orders',    []);
-let settings  = loadData('gm_settings',  defaultSettings);
+let products  = loadData('gm_lkr_products',  defaultProducts);
+let customers = loadData('gm_lkr_customers', defaultCustomers);
+let orders    = loadData('gm_lkr_orders',    []);
+let settings  = loadData('gm_lkr_settings',  defaultSettings);
 
 let cart = [];                  // items in the current order
 let currentCategory = 'all';    // selected category filter
@@ -376,8 +376,8 @@ function completePayment() {
 
   orders.unshift(order);   // newest order first
 
-  saveData('gm_orders', orders);
-  saveData('gm_products', products);
+  saveData('gm_lkr_orders', orders);
+  saveData('gm_lkr_products', products);
 
   // reset the screen
   cart = [];
@@ -498,7 +498,7 @@ function updateOrderStatus(orderId, newStatus) {
   if (!order) return;
 
   order.status = newStatus;
-  saveData('gm_orders', orders);
+  saveData('gm_lkr_orders', orders);
 }
 
 function viewOrder(orderId) {
@@ -510,7 +510,7 @@ function deleteOrder(orderId) {
   if (!confirm('Are you sure you want to delete this order?')) return;
 
   orders = orders.filter(function (o) { return o.id !== orderId; });
-  saveData('gm_orders', orders);
+  saveData('gm_lkr_orders', orders);
   renderOrders();
 }
 
@@ -596,7 +596,7 @@ document.getElementById('productForm').addEventListener('submit', function (even
     products.push(data);
   }
 
-  saveData('gm_products', products);
+  saveData('gm_lkr_products', products);
   closeModal('productFormModal');
   renderProductsList();
   renderProducts();
@@ -609,7 +609,7 @@ function deleteProduct(productId) {
   products = products.filter(function (p) { return p.id !== productId; });
   cart = cart.filter(function (item) { return item.id !== productId; });
 
-  saveData('gm_products', products);
+  saveData('gm_lkr_products', products);
   renderProductsList();
   renderProducts();
   renderCart();
@@ -693,7 +693,7 @@ document.getElementById('customerForm').addEventListener('submit', function (eve
     customers.push(data);
   }
 
-  saveData('gm_customers', customers);
+  saveData('gm_lkr_customers', customers);
   closeModal('customerFormModal');
   renderCustomersList();
   renderCustomerSelect();
@@ -703,7 +703,7 @@ function deleteCustomer(customerId) {
   if (!confirm('Are you sure you want to delete this customer?')) return;
 
   customers = customers.filter(function (c) { return c.id !== customerId; });
-  saveData('gm_customers', customers);
+  saveData('gm_lkr_customers', customers);
   renderCustomersList();
   renderCustomerSelect();
 }
@@ -729,7 +729,7 @@ document.getElementById('settingsForm').addEventListener('submit', function (eve
   settings.shopEmail = document.getElementById('shopEmail').value.trim();
   settings.taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
 
-  saveData('gm_settings', settings);
+  saveData('gm_lkr_settings', settings);
   document.getElementById('headerShopName').textContent = settings.shopName;
   closeModal('settingsModal');
   renderCart();   // tax may have changed
