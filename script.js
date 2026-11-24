@@ -444,6 +444,78 @@ function showReceipt(order) {
 }
 
 
+// ---------- 10. ORDERS (Read, Update status, Delete) ----------
+
+function showOrders() {
+  renderOrders();
+  openModal('ordersModal');
+}
+
+function renderOrders() {
+  const list = document.getElementById('ordersList');
+
+  if (orders.length === 0) {
+    list.innerHTML = '<div class="empty-text">No orders yet. Complete a checkout to see it here.</div>';
+    return;
+  }
+
+  let html = '';
+  orders.forEach(function (order) {
+    // short text like "Burger (2), Fries (1)"
+    const summary = order.items.map(function (item) {
+      return escapeHtml(item.name) + ' (' + item.quantity + ')';
+    }).join(', ');
+
+    html += `
+      <div class="list-item">
+        <div class="list-info">
+          <div class="list-title">Order #${order.id}</div>
+          <div class="list-sub">${new Date(order.date).toLocaleString()} | Customer: ${escapeHtml(order.customerName)}</div>
+          <div class="list-sub">${summary}</div>
+        </div>
+        <div class="list-side">
+          <span class="order-total">${money(order.total)}</span>
+          <select class="status-select" onchange="updateOrderStatus(${order.id}, this.value)">
+            ${statusOption(order.status, 'Completed')}
+            ${statusOption(order.status, 'Refunded')}
+            ${statusOption(order.status, 'Cancelled')}
+          </select>
+          <button class="btn btn-view" onclick="viewOrder(${order.id})">Receipt</button>
+          <button class="btn btn-delete" onclick="deleteOrder(${order.id})">Delete</button>
+        </div>
+      </div>
+    `;
+  });
+  list.innerHTML = html;
+}
+
+function statusOption(current, value) {
+  const selected = current === value ? 'selected' : '';
+  return `<option value="${value}" ${selected}>${value}</option>`;
+}
+
+function updateOrderStatus(orderId, newStatus) {
+  const order = orders.find(function (o) { return o.id === orderId; });
+  if (!order) return;
+
+  order.status = newStatus;
+  saveData('gm_orders', orders);
+}
+
+function viewOrder(orderId) {
+  const order = orders.find(function (o) { return o.id === orderId; });
+  if (order) showReceipt(order);
+}
+
+function deleteOrder(orderId) {
+  if (!confirm('Are you sure you want to delete this order?')) return;
+
+  orders = orders.filter(function (o) { return o.id !== orderId; });
+  saveData('gm_orders', orders);
+  renderOrders();
+}
+
+
 // ---------- 11. PRODUCTS CRUD ----------
 
 function showProducts() {
