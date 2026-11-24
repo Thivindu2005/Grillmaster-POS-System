@@ -472,3 +472,27 @@ body {
   border-top: 1px dashed #9ca3af;
 }
 
+/* ---------- Print: only show the receipt ---------- */
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+
+  .container,
+  .modal:not(#receiptModal),
+  #receiptModal .btn {
+    display: none !important;
+  }
+
+  #receiptModal {
+    position: static;
+    background: none;
+    display: block !important;
+  }
+
+  #receiptModal .modal-content {
+    box-shadow: none;
+    max-width: 100%;
+  }
+}
