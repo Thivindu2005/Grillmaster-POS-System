@@ -360,3 +360,115 @@ body {
   border-color: var(--primary);
 }
 
+/* ---------- Modals ---------- */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+/* the add/edit forms must appear above the list modals */
+.modal.modal-top {
+  z-index: 200;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-content.wide {
+  max-width: 680px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.modal-header h2 {
+  font-size: 1.3rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.payment-total {
+  background: var(--bg-light);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+/* ---------- Receipt ---------- */
+.receipt {
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+}
+
+.receipt-head {
+  text-align: center;
+  border-bottom: 1px dashed #9ca3af;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.receipt-head h3 {
+  font-size: 1.1rem;
+}
+
+.receipt-head p {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.receipt-row small {
+  color: var(--muted);
+}
+
+.receipt-row.total {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.05rem;
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+.receipt-foot {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed #9ca3af;
+}
+

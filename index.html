@@ -78,6 +78,52 @@
   </div>
 
 
+  <!-- ================= MODAL: PAYMENT ================= -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Payment</h2>
+        <button class="close-btn" onclick="closeModal('paymentModal')">&times;</button>
+      </div>
+
+      <div class="payment-total">
+        Amount Due: <strong id="paymentDue">Rs. 0.00</strong>
+      </div>
+
+      <div class="form-group">
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" class="form-control">
+          <option value="Cash">Cash</option>
+          <option value="Card">Credit/Debit Card</option>
+          <option value="Digital Wallet">Digital Wallet</option>
+        </select>
+      </div>
+
+      <div id="cashFields">
+        <div class="form-group">
+          <label for="amountReceived">Amount Received</label>
+          <input type="number" id="amountReceived" class="form-control" step="0.01" min="0" placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label for="changeAmount">Change</label>
+          <input type="text" id="changeAmount" class="form-control" value="Rs. 0.00" readonly />
+        </div>
+      </div>
+
+      <button class="btn btn-success full" onclick="completePayment()">✓ Complete Payment</button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: RECEIPT ================= -->
+  <div class="modal" id="receiptModal">
+    <div class="modal-content">
+      <div id="receiptContent" class="receipt"></div>
+      <button class="btn btn-outline full" onclick="window.print()">🖨️ Print Receipt</button>
+      <button class="btn btn-dark full" onclick="closeModal('receiptModal')">New Transaction</button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>

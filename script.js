@@ -295,6 +295,155 @@ function renderCustomerSelect() {
 }
 
 
+// ---------- 8. PAYMENT & CHECKOUT ----------
+
+function openPayment() {
+  if (cart.length === 0) return;
+
+  lastTotals = calculateTotals();
+  document.getElementById('paymentDue').textContent = money(lastTotals.total);
+  document.getElementById('paymentMethod').value = 'Cash';
+  document.getElementById('amountReceived').value = '';
+  document.getElementById('changeAmount').value = money(0);
+  document.getElementById('cashFields').style.display = 'block';
+
+  openModal('paymentModal');
+}
+
+// show or hide the cash fields when the method changes
+document.getElementById('paymentMethod').addEventListener('change', function () {
+  const isCash = this.value === 'Cash';
+  document.getElementById('cashFields').style.display = isCash ? 'block' : 'none';
+});
+
+// calculate change while the cashier types
+document.getElementById('amountReceived').addEventListener('input', function () {
+  const received = parseFloat(this.value) || 0;
+  const change = received - lastTotals.total;
+  document.getElementById('changeAmount').value = change > 0 ? money(change) : money(0);
+});
+
+function completePayment() {
+  const method = document.getElementById('paymentMethod').value;
+  let received = lastTotals.total;
+  let change = 0;
+
+  if (method === 'Cash') {
+    received = parseFloat(document.getElementById('amountReceived').value) || 0;
+
+    if (received < lastTotals.total) {
+      alert('Amount received is less than the total!');
+      return;
+    }
+    change = received - lastTotals.total;
+  }
+
+  // find the selected customer
+  const customerId = parseInt(document.getElementById('customerSelect').value);
+  const customer = customers.find(function (c) { return c.id === customerId; });
+
+  // build the order items (we copy name and price so old orders never change)
+  const orderItems = cart.map(function (item) {
+    const product = products.find(function (p) { return p.id === item.id; });
+    return {
+      productId: product.id,
+      name: product.name,
+      icon: product.icon,
+      price: product.price,
+      quantity: item.quantity
+    };
+  });
+
+  const order = {
+    id: nextId(orders),
+    date: new Date().toISOString(),
+    customerId: customer ? customer.id : 0,
+    customerName: customer ? customer.name : 'Walk-in',
+    items: orderItems,
+    subtotal: lastTotals.subtotal,
+    tax: lastTotals.tax,
+    total: lastTotals.total,
+    paymentMethod: method,
+    received: received,
+    change: change,
+    status: 'Completed'
+  };
+
+  // reduce the stock of every sold product
+  cart.forEach(function (item) {
+    const product = products.find(function (p) { return p.id === item.id; });
+    product.stock -= item.quantity;
+  });
+
+  orders.unshift(order);   // newest order first
+
+  saveData('gm_orders', orders);
+  saveData('gm_products', products);
+
+  // reset the screen
+  cart = [];
+  closeModal('paymentModal');
+  renderCart();
+  renderProducts();
+  showReceipt(order);
+}
+
+
+// ---------- 9. RECEIPT ----------
+
+function showReceipt(order) {
+  let itemsHtml = '';
+  order.items.forEach(function (item) {
+    itemsHtml += `
+      <div class="receipt-row">
+        <div>
+          ${escapeHtml(item.name)}<br />
+          <small>${item.quantity} × ${money(item.price)}</small>
+        </div>
+        <div>${money(item.price * item.quantity)}</div>
+      </div>
+    `;
+  });
+
+  let paymentHtml = `
+    <div class="receipt-row"><span>Payment Method:</span><span>${escapeHtml(order.paymentMethod)}</span></div>
+  `;
+
+  if (order.paymentMethod === 'Cash') {
+    paymentHtml += `
+      <div class="receipt-row"><span>Amount Received:</span><span>${money(order.received)}</span></div>
+      <div class="receipt-row"><span>Change:</span><span>${money(order.change)}</span></div>
+    `;
+  }
+
+  document.getElementById('receiptContent').innerHTML = `
+    <div class="receipt-head">
+      <h3>${escapeHtml(settings.shopName)}</h3>
+      <p>${escapeHtml(settings.shopAddress)}</p>
+      <p>${escapeHtml(settings.shopPhone)}</p>
+      <p>${escapeHtml(settings.shopEmail)}</p>
+      <p>${new Date(order.date).toLocaleString()}</p>
+      <p>Order #${order.id} | Customer: ${escapeHtml(order.customerName)}</p>
+    </div>
+
+    ${itemsHtml}
+
+    <div class="receipt-row"><span>Subtotal:</span><span>${money(order.subtotal)}</span></div>
+    <div class="receipt-row"><span>Tax (${settings.taxRate}%):</span><span>${money(order.tax)}</span></div>
+    <div class="receipt-row total"><span>Total:</span><span>${money(order.total)}</span></div>
+
+    ${paymentHtml}
+
+    <div class="receipt-foot">
+      Thank you for your business!<br />
+      Visit us again!
+    </div>
+  `;
+
+  openModal('receiptModal');
+}
+
+
 // ---------- 15. START THE APP ----------
 
 function init() {
