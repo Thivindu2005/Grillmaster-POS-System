@@ -31,3 +31,89 @@ body {
   color: var(--text);
 }
 
+/* ---------- Main container ---------- */
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- Header ---------- */
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  border: none;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary   { background: white; color: var(--primary); }
+.btn-secondary { background: var(--dark); color: white; }
+.btn-warning   { background: var(--warning); color: white; }
+.btn-danger    { background: var(--danger); color: white; }
+.btn-success   { background: var(--success); color: white; }
+.btn-dark      { background: var(--dark); color: white; }
+.btn-edit      { background: #3b82f6; color: white; padding: 5px 10px; font-size: 0.75rem; }
+.btn-view      { background: var(--primary); color: white; padding: 5px 10px; font-size: 0.75rem; }
+.btn-delete    { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.75rem; }
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--border);
+}
+
+.btn.full {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 0.95rem;
+}
+
+/* ---------- Main layout (products + cart) ---------- */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  padding: 24px;
+}
+
