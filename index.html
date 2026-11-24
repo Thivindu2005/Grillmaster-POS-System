@@ -78,6 +78,63 @@
   </div>
 
 
+  <!-- ================= MODAL: PRODUCTS LIST ================= -->
+  <div class="modal" id="productsModal">
+    <div class="modal-content wide">
+      <div class="modal-header">
+        <h2>Product Management</h2>
+        <button class="close-btn" onclick="closeModal('productsModal')">&times;</button>
+      </div>
+      <button class="btn btn-success" onclick="openProductForm()">➕ Add New Product</button>
+      <div class="list" id="productsList"></div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PRODUCT FORM (add / edit) ================= -->
+  <div class="modal modal-top" id="productFormModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="productFormTitle">Add New Product</h2>
+        <button class="close-btn" onclick="closeModal('productFormModal')">&times;</button>
+      </div>
+      <form id="productForm">
+        <input type="hidden" id="productId" />
+
+        <div class="form-group">
+          <label for="productName">Product Name *</label>
+          <input type="text" id="productName" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+          <label for="productPrice">Price (LKR) *</label>
+          <input type="number" id="productPrice" class="form-control" step="0.01" min="0" required />
+        </div>
+
+        <div class="form-group">
+          <label for="productCategory">Category *</label>
+          <select id="productCategory" class="form-control" required>
+            <option value="burgers">Burgers</option>
+            <option value="fries">Fries</option>
+            <option value="drinks">Drinks</option>
+            <option value="desserts">Desserts</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="productIcon">Icon (Emoji) *</label>
+          <input type="text" id="productIcon" class="form-control" maxlength="4" required />
+        </div>
+
+        <div class="form-group">
+          <label for="productStock">Stock *</label>
+          <input type="number" id="productStock" class="form-control" min="0" required />
+        </div>
+
+        <button type="submit" class="btn btn-success full">💾 Save Product</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ================= MODAL: PAYMENT ================= -->
   <div class="modal" id="paymentModal">
     <div class="modal-content">

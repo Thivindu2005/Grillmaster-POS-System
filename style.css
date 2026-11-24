@@ -422,6 +422,66 @@ body {
   text-align: center;
 }
 
+/* ---------- Lists inside modals (products, customers, orders) ---------- */
+.list {
+  margin-top: 14px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.list-sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.list-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.stock-badge {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.stock-badge.low {
+  color: var(--danger);
+}
+
+.order-total {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.status-select {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+}
+
 /* ---------- Receipt ---------- */
 .receipt {
   font-size: 0.85rem;

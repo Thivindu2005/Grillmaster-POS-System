@@ -444,6 +444,107 @@ function showReceipt(order) {
 }
 
 
+// ---------- 11. PRODUCTS CRUD ----------
+
+function showProducts() {
+  renderProductsList();
+  openModal('productsModal');
+}
+
+function renderProductsList() {
+  const list = document.getElementById('productsList');
+
+  if (products.length === 0) {
+    list.innerHTML = '<div class="empty-text">No products yet. Add your first product.</div>';
+    return;
+  }
+
+  let html = '';
+  products.forEach(function (product) {
+    const lowClass = product.stock <= 10 ? 'low' : '';
+    html += `
+      <div class="list-item">
+        <div class="list-info">
+          <div class="list-title">${escapeHtml(product.icon)} ${escapeHtml(product.name)}</div>
+          <div class="list-sub">${money(product.price)} | ${escapeHtml(product.category)}</div>
+        </div>
+        <div class="list-side">
+          <span class="stock-badge ${lowClass}">${product.stock} units</span>
+          <button class="btn btn-edit" onclick="openProductForm(${product.id})">✏️ Edit</button>
+          <button class="btn btn-delete" onclick="deleteProduct(${product.id})">🗑️ Delete</button>
+        </div>
+      </div>
+    `;
+  });
+  list.innerHTML = html;
+}
+
+// opens the form empty (add) or filled (edit)
+function openProductForm(productId) {
+  const form = document.getElementById('productForm');
+  form.reset();
+  document.getElementById('productId').value = '';
+  document.getElementById('productFormTitle').textContent = 'Add New Product';
+
+  if (productId) {
+    const product = products.find(function (p) { return p.id === productId; });
+    if (product) {
+      document.getElementById('productFormTitle').textContent = 'Edit Product';
+      document.getElementById('productId').value = product.id;
+      document.getElementById('productName').value = product.name;
+      document.getElementById('productPrice').value = product.price;
+      document.getElementById('productCategory').value = product.category;
+      document.getElementById('productIcon').value = product.icon;
+      document.getElementById('productStock').value = product.stock;
+    }
+  }
+
+  openModal('productFormModal');
+}
+
+document.getElementById('productForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const id = document.getElementById('productId').value;
+
+  const data = {
+    name: document.getElementById('productName').value.trim(),
+    price: parseFloat(document.getElementById('productPrice').value),
+    category: document.getElementById('productCategory').value,
+    icon: document.getElementById('productIcon').value.trim(),
+    stock: parseInt(document.getElementById('productStock').value)
+  };
+
+  if (id) {
+    // UPDATE an existing product
+    const product = products.find(function (p) { return p.id === parseInt(id); });
+    Object.assign(product, data);
+  } else {
+    // CREATE a new product
+    data.id = nextId(products);
+    products.push(data);
+  }
+
+  saveData('gm_products', products);
+  closeModal('productFormModal');
+  renderProductsList();
+  renderProducts();
+  renderCart();   // cart may show old name or price
+});
+
+function deleteProduct(productId) {
+  if (!confirm('Are you sure you want to delete this product?')) return;
+
+  products = products.filter(function (p) { return p.id !== productId; });
+  cart = cart.filter(function (item) { return item.id !== productId; });
+
+  saveData('gm_products', products);
+  renderProductsList();
+  renderProducts();
+  renderCart();
+}
+
+
 // ---------- 15. START THE APP ----------
 
 function init() {
