@@ -46,6 +46,34 @@
         <div class="products-grid" id="productGrid"></div>
       </div>
 
+      <!-- Right side: current order -->
+      <div class="cart-section">
+        <h2>🛒 Current Order</h2>
+
+        <select id="customerSelect" class="form-control"></select>
+
+        <div class="cart-items" id="cartItems"></div>
+
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span id="subtotal">Rs. 0.00</span>
+          </div>
+          <div class="summary-row">
+            <span id="taxLabel">Tax (10%):</span>
+            <span id="tax">Rs. 0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span id="total">Rs. 0.00</span>
+          </div>
+        </div>
+
+        <button class="btn btn-success checkout-btn" id="checkoutBtn" onclick="openPayment()" disabled>
+          💳 Checkout
+        </button>
+      </div>
+
     </div>
   </div>
 

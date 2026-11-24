@@ -154,11 +154,154 @@ document.getElementById('categories').addEventListener('click', function (event)
 });
 
 
+// ---------- 6. CART ----------
+
+function addToCart(productId) {
+  const product = products.find(function (p) { return p.id === productId; });
+  if (!product) return;
+
+  if (product.stock <= 0) {
+    alert('Product out of stock!');
+    return;
+  }
+
+  const existing = cart.find(function (item) { return item.id === productId; });
+
+  if (existing) {
+    // do not allow more than what we have in stock
+    if (existing.quantity >= product.stock) {
+      alert('Only ' + product.stock + ' left in stock!');
+      return;
+    }
+    existing.quantity++;
+  } else {
+    cart.push({ id: product.id, quantity: 1 });
+  }
+
+  renderCart();
+}
+
+function changeQuantity(productId, change) {
+  const item = cart.find(function (i) { return i.id === productId; });
+  const product = products.find(function (p) { return p.id === productId; });
+  if (!item || !product) return;
+
+  const newQty = item.quantity + change;
+
+  if (newQty > product.stock) {
+    alert('Only ' + product.stock + ' left in stock!');
+    return;
+  }
+
+  if (newQty <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+
+  item.quantity = newQty;
+  renderCart();
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(function (item) { return item.id !== productId; });
+  renderCart();
+}
+
+function clearCart() {
+  if (cart.length === 0) return;
+  if (confirm('Clear all items from the cart?')) {
+    cart = [];
+    renderCart();
+  }
+}
+
+// work out subtotal, tax and total
+function calculateTotals() {
+  let subtotal = 0;
+
+  cart.forEach(function (item) {
+    const product = products.find(function (p) { return p.id === item.id; });
+    if (product) subtotal += product.price * item.quantity;
+  });
+
+  const tax = subtotal * (settings.taxRate / 100);
+  const total = subtotal + tax;
+
+  return { subtotal: subtotal, tax: tax, total: total };
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        <div class="cart-icon">🛒</div>
+        <div>Cart is empty</div>
+        <div>Add items to get started</div>
+      </div>
+    `;
+  } else {
+    let html = '';
+    cart.forEach(function (item) {
+      const product = products.find(function (p) { return p.id === item.id; });
+      if (!product) return;
+
+      html += `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-name">${escapeHtml(product.icon)} ${escapeHtml(product.name)}</div>
+            <div class="cart-item-price">${money(product.price)} each</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="changeQuantity(${product.id}, -1)">−</button>
+            <span class="qty-number">${item.quantity}</span>
+            <button class="qty-btn" onclick="changeQuantity(${product.id}, 1)">+</button>
+            <button class="qty-btn remove" onclick="removeFromCart(${product.id})">×</button>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  const totals = calculateTotals();
+  document.getElementById('subtotal').textContent = money(totals.subtotal);
+  document.getElementById('tax').textContent = money(totals.tax);
+  document.getElementById('total').textContent = money(totals.total);
+  document.getElementById('taxLabel').textContent = 'Tax (' + settings.taxRate + '%):';
+
+  // the checkout button only works when the cart has items
+  document.getElementById('checkoutBtn').disabled = cart.length === 0;
+}
+
+
+// ---------- 7. CUSTOMER DROPDOWN (on the cart) ----------
+
+function renderCustomerSelect() {
+  const select = document.getElementById('customerSelect');
+  const oldValue = select.value;
+
+  let html = '<option value="0">Walk-in Customer</option>';
+  customers.forEach(function (customer) {
+    html += `<option value="${customer.id}">${escapeHtml(customer.name)}</option>`;
+  });
+  select.innerHTML = html;
+
+  // keep the old selection if that customer still exists
+  if (oldValue && select.querySelector('option[value="' + oldValue + '"]')) {
+    select.value = oldValue;
+  }
+}
+
+
 // ---------- 15. START THE APP ----------
 
 function init() {
   document.getElementById('headerShopName').textContent = settings.shopName;
   renderProducts();
+  renderCustomerSelect();
+  renderCart();
 }
 
 init();

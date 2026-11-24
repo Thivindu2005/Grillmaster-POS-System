@@ -220,3 +220,143 @@ body {
   padding: 30px;
 }
 
+/* ---------- Cart ---------- */
+.cart-section {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.cart-items {
+  flex: 1;
+  min-height: 180px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 14px 0;
+}
+
+.cart-empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 30px 10px;
+  font-size: 0.85rem;
+}
+
+.cart-empty .cart-icon {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-light);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.cart-item-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cart-item-price {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.qty-btn.remove {
+  background: var(--danger);
+}
+
+.qty-number {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ---------- Totals ---------- */
+.cart-summary {
+  background: var(--bg-light);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.summary-row.total {
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+  padding-top: 10px;
+  margin-bottom: 0;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+/* ---------- Form controls ---------- */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: white;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
